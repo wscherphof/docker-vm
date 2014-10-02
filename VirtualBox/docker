@@ -1,26 +1,27 @@
 #!/bin/bash
 
+BOOTING=0
 if ! VBoxManage list runningvms | grep '"Docker"' > /dev/null; then
+  BOOTING=1
+  echo -n 'Starting Docker VM...'
 	nohup VBoxHeadless -s Docker > /dev/null &
 fi 2> /dev/null
-echo -n 'Starting Docker VM...'
 while :; do
   IP=$(VBoxManage guestproperty get Docker /VirtualBox/GuestInfo/Net/0/V4/IP 2>> /dev/null)
   if [ "$(echo "$IP" | awk '{ print $1 }')" == "Value:" ]; then
     IP=$(echo "$IP" | awk '{ print $2 }')
-    echo 'done'
     break
   else
     echo -n '.'
     sleep 1
   fi
 done
-echo "Wait for connection"
-# Retry if ssh reaches the server, but fails to connect while the server hasn't finished booting
-TIMEOUT=$(($(date +%s) + 15))
-while ! ssh $IP; do
-  if [ $(date +%s) -gt $TIMEOUT ]; then
-    break
-  fi
-  sleep 1
-done
+if (($BOOTING)); then
+  # give it some time to fully start up
+  for i in {1..5}; do
+    echo -n '.'
+    sleep 1
+  done
+  echo 'done'
+fi
+ssh $IP
