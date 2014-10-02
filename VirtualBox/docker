@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if ! VBoxManage list runningvms | grep '"Docker"' > /dev/null; then
+	nohup VBoxHeadless -s Docker > /dev/null &
+fi 2> /dev/null
+echo -n 'Connecting to Docker VM...'
+while :; do
+  IP=$(VBoxManage guestproperty get Docker /VirtualBox/GuestInfo/Net/0/V4/IP 2>> /dev/null)
+  if [ "$(echo "$IP" | awk '{ print $1 }')" == "Value:" ]; then
+    IP=$(echo "$IP" | awk '{ print $2 }')
+    echo 'done'
+    break
+  else
+    echo -n '.'
+    sleep 1
+  fi
+done
+ssh $IP
