@@ -16,4 +16,11 @@ while :; do
   fi
 done
 echo "Wait for connection"
-while ! ssh $IP; do true; done
+# Retry if ssh reaches the server, but fails to connect while the server hasn't finished booting
+TIMEOUT=$(($(date +%s) + 15))
+while ! ssh $IP; do
+  if [ $(date +%s) -gt $TIMEOUT ]; then
+    break
+  fi
+  sleep 1
+done
