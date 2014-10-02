@@ -4,7 +4,7 @@ BOOTING=0
 if ! VBoxManage list runningvms | grep '"Docker"' > /dev/null; then
   BOOTING=1
   echo -n 'Starting Docker VM...'
-	nohup VBoxHeadless -s Docker > /dev/null &
+  nohup VBoxHeadless -s Docker > /dev/null &
 fi 2> /dev/null
 while :; do
   IP=$(VBoxManage guestproperty get Docker /VirtualBox/GuestInfo/Net/0/V4/IP 2>> /dev/null)
