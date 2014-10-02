@@ -15,19 +15,21 @@ This is how I set up my environment:
 - Connected to the Internet w/ DHCP server in local network
 
 ### 1. Install VirtualBox
+- [Download](https://www.virtualbox.org/wiki/Downloads)
+- Double click
 
 ### 2. Create Virtual Machine
-- Download .iso file from [Ubuntu website](http://www.ubuntu.com/download/server) (I had `ubuntu-14.04.1-server-amd64.iso`)
+- [Download .iso file](http://www.ubuntu.com/download/server) (I had `ubuntu-14.04.1-server-amd64.iso`)
 - In VirtualBox menu `Machine | New...`
 - Type: Linux
 - Version: Ubuntu (64 bit)
-- 4096 MB RAM
+- 4096 MB RAM (or less ;-))
 - Create new virtual disk now
 - VDI (VirtualBox Disk Image)
 - Dynamically allocated
-- 50 GB
-- Start the new machine & choose the downloaded ubuntu .iso file
-- Accept all default options during install, except:
+- 50 GB (or less)
+- Start the new machine & choose the downloaded ubuntu .iso file to install the OS
+- Accept all default options, except:
 - Host name: `docker`
 - User name: same as host
 - Partitioning method: Guided - use entire disk
@@ -64,10 +66,10 @@ This is how I set up my environment:
 - Startup the VM & login
 - `$ ip -f inet addr` - verify that the eth0 interface lists a (DHCP-supplied) address
 - `$ ls -la /media` - verify that the shared folder `sf_host` is listed, and owned by root in the vboxsf group
-- optional: `$ sudo adduser <you> vboxsf` - this will add your user to the vboxsf group
-- optional: `$ exit`
-- optional: Login again
-- optional: `$ ls /media/sf_host` - verify you don't get "permission denied"
+- `$ sudo adduser <you> vboxsf` - this will add your user to the vboxsf group
+- `$ exit`
+- Login again
+- `$ ls /media/sf_host` - verify you don't get "permission denied"
 
 ### 5. Install Docker
 - `$ sudo bash`
@@ -82,17 +84,16 @@ This is how I set up my environment:
 - `$ docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter`
 
 ### 7. optional: passwordless ssh
-- `$ ssh-keygen -t dsa` - generates keys on your host machine (where you'll run the ssh client to access the Docker VM) - if not already done
-- `$ cat ~/.ssh/id_dsa.pub | ssh <docker-vm-ip> "mkdir -p .ssh && cat >> ~/.ssh/authorized_keys"` - lists your key as an authorised key on the Docker VM (answer yes to the authenticity question & enter your password to connect)
+- on your host machine (where you'll run the ssh client to access the Docker VM) `$ ssh-keygen -t dsa` to generates a key, if not already done
+- `$ cat ~/.ssh/id_dsa.pub | ssh <docker-vm-ip> "mkdir -p .ssh && cat >> ~/.ssh/authorized_keys"` - to list your key as an authorised key on the Docker VM (answer yes to the authenticity question & enter your password to connect)
 - `$ ssh <docker-vm-ip>` - verify that you weren't asked for your password now
-- `$ exit`
+- `$ exit` - end the ssh session
 
 ### 8. Install the start script
 - `$ sudo cp ./VirtualBox/docker /usr/local/bin`
 - `$ docker`
 ```
 Starting Docker VM...............done
-Wait for connection
 Welcome to Ubuntu 14.04.1 LTS (GNU/Linux 3.13.0-32-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
