@@ -3,7 +3,7 @@
 if ! VBoxManage list runningvms | grep '"Docker"' > /dev/null; then
 	nohup VBoxHeadless -s Docker > /dev/null &
 fi 2> /dev/null
-echo -n 'Connecting to Docker VM...'
+echo -n 'Starting Docker VM...'
 while :; do
   IP=$(VBoxManage guestproperty get Docker /VirtualBox/GuestInfo/Net/0/V4/IP 2>> /dev/null)
   if [ "$(echo "$IP" | awk '{ print $1 }')" == "Value:" ]; then
@@ -15,4 +15,5 @@ while :; do
     sleep 1
   fi
 done
-ssh $IP
+echo "Wait for connection"
+while ! ssh $IP; do true; done
