@@ -5,7 +5,7 @@ If you run your Docker host as a virtual machine, this repo provides a quick & e
 
 ## Usage
 - Just run the applicable `docker` script
-- Note that if it asks for your (sudo) password, it's to gain access to the hosts file
+- If you're asked for your (sudo) password, it's for accessing the hosts file, where the address is updated (if it changed) so you can consistently connect to the VM by name (e.g. `http://docker` if you have a web server container running)
 - Use `docker -h` if you don't want it to update your hosts file
 
 ## Current limitations
