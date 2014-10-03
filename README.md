@@ -84,7 +84,7 @@ This is how I set up my environment:
 - `$ docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter`
 
 ### 7. optional: passwordless ssh
-- on your host machine (where you'll run the ssh client to access the Docker VM) `$ ssh-keygen -t dsa` to generates a key, if not already done
+- on your host machine (where you'll run the ssh client to access the Docker VM) `$ ssh-keygen -t dsa` to generate a key, if not already done
 - `$ cat ~/.ssh/id_dsa.pub | ssh <docker-vm-ip> "mkdir -p .ssh && cat >> ~/.ssh/authorized_keys"` - to list your key as an authorised key on the Docker VM (answer yes to the authenticity question & enter your password to connect)
 - `$ ssh <docker-vm-ip>` - verify that you weren't asked for your password now
 - `$ exit` - end the ssh session
