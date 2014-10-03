@@ -25,15 +25,24 @@ if (($BOOTING)); then
   echo 'done'
 fi
 
-if [ $# == 0 ]; then
-  ssh $DOCKER_IP
-fi
-
-if [ "$1" == "hosts" ]; then
-  if cat /etc/hosts | grep " docker" > /dev/null; then
-    sudo bash -c "sed -i -E 's/.* docker/$DOCKER_IP docker/' /etc/hosts"
-  else
+case "$1" in
+"")
+  if ! cat /etc/hosts | grep " docker" > /dev/null; then
     sudo bash -c "echo '$DOCKER_IP docker' >> /etc/hosts"
+  else
+    HOSTS_IP=$(sed -n 's/\(.*\) docker/\1/p' /etc/hosts)
+    if [ "$DOCKER_IP" != "$HOSTS_IP" ]; then
+      sudo bash -c "sed -i -E 's/.* docker/$DOCKER_IP docker/' /etc/hosts"
+    fi
   fi
-  cat /etc/hosts | grep " docker"
-fi
+;;
+-h)
+  true
+;;
+*)
+  echo $"Usage: $0 [-h]"
+  echo $"-h skips updating the hosts file"
+  exit 1
+esac
+
+ssh $DOCKER_IP
