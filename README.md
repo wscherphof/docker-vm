@@ -58,7 +58,7 @@ This is how I set up my environment:
 - OK
 - In the machine settings, choose Shared Folders tab
 - Click the tiny icon "Adds a new shared folder definition" and select Folder Path "Other..."
-- Create a new folder on the host computer to share with the Ubuntu Server VM
+- Create a new directory on the host computer to share with the Ubuntu Server VM (existing directories may not get recognised by VirtualBox, especially "special" ones, like your home directory)
 - Choose the newly created folder
 - Folder name: `host`
 - Select `Auto-mount` and `Make permanent`
