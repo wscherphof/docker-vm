@@ -12,6 +12,7 @@ If you run your Docker host as a virtual machine, this repo provides a quick & e
 - Only VirtualBox VMs
 - VM name must be `Docker`
 - Only runs from bash
+If you're on Windows, you should be good to go after installing [GitHub for Windows](https://windows.github.com/), and start `bash` from the Git Shell
 
 ## Ubuntu Server on VirtualBox
 This is how I set up my environment:
