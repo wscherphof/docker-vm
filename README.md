@@ -3,9 +3,14 @@ docker-vm
 
 If you run your Docker host as a virtual machine, this repo provides a quick & easy way to start it & connect to it (through ssh) from the computer that hosts the VM
 
-Current limitations:
+## Usage
+- Just run the applicable `docker` script
+- Note that if it asks for your (sudo) password, it's to gain access to the hosts file
+- Use `docker -h` if you don't want it to update your hosts file
+
+## Current limitations
 - Only VirtualBox VMs
-- VM name must be Docker
+- VM name must be `Docker`
 - Only runs from bash
 
 ## Ubuntu Server on VirtualBox
