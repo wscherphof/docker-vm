@@ -2,14 +2,14 @@
 
 BOOTING=0
 if ! VBoxManage list runningvms | grep '"Docker"' > /dev/null; then
-  BOOTING=1
-  echo -n 'Starting Docker VM...'
+  echo -n 'Starting Docker VM'
   nohup VBoxHeadless -s Docker > /dev/null &
+  BOOTING=1
 fi 2> /dev/null
 while :; do
-  IP=$(VBoxManage guestproperty get Docker /VirtualBox/GuestInfo/Net/0/V4/IP 2>> /dev/null)
-  if [ "$(echo "$IP" | awk '{ print $1 }')" == "Value:" ]; then
-    IP=$(echo "$IP" | awk '{ print $2 }')
+  DOCKER_IP=$(VBoxManage guestproperty get Docker /VirtualBox/GuestInfo/Net/0/V4/IP 2>> /dev/null)
+  if [ "$(echo "$DOCKER_IP" | awk '{ print $1 }')" == "Value:" ]; then
+    DOCKER_IP=$(echo "$DOCKER_IP" | awk '{ print $2 }')
     break
   else
     echo -n '.'
@@ -24,4 +24,16 @@ if (($BOOTING)); then
   done
   echo 'done'
 fi
-ssh $IP
+
+if [ $# == 0 ]; then
+  ssh $DOCKER_IP
+fi
+
+if [ "$1" == "hosts" ]; then
+  if cat /etc/hosts | grep " docker" > /dev/null; then
+    sudo bash -c "sed -i -E 's/.* docker/$DOCKER_IP docker/' /etc/hosts"
+  else
+    sudo bash -c "echo '$DOCKER_IP docker' >> /etc/hosts"
+  fi
+  cat /etc/hosts | grep " docker"
+fi
