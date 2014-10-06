@@ -56,11 +56,13 @@ This is how I set up my environment:
 - `$ cd /media/cdrom`
 - `$ ./VBoxLinuxAdditions.run` - the last line will state "Could not find the X.Org or XFree86 Window System, skipping;" that's alright, since we have a windowless server
 
-### 4. Create Shared Folder
+### 4. Configure networking
 - In VirtualBox menu (with Ubuntu server window focused) `Machine | ACPI Shutdown`
 - In the machine settings, choose Network tab
-- Attached to: Bridged Adapter
+- Attached to: Bridged Adapter (why? because w/ any other mode, the host failed to connect to the VM)
 - OK
+
+### 5. Create Shared Folder
 - In the machine settings, choose Shared Folders tab
 - Click the tiny icon "Adds a new shared folder definition" and select Folder Path "Other..."
 - Create a new directory on the host computer to share with the Ubuntu Server VM (existing directories may not get recognised by VirtualBox, especially "special" ones, like your home directory)
@@ -76,7 +78,7 @@ This is how I set up my environment:
 - Login again
 - `$ ls /media/sf_host` - verify you don't get "permission denied"
 
-### 5. Install Docker
+### 6. Install Docker
 - `$ sudo bash`
 - optional: see the (Docker installation page)[https://docs.docker.com/installation/ubuntulinux/]
 - `$ apt-get -y install docker.io`
@@ -84,17 +86,17 @@ This is how I set up my environment:
 - `$ sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io`
 - `$ docker version` - verify that this reports the client & server versions of Docker
 
-### 6. optional: nsenter
+### 7. optional: nsenter
 - optional: see the (nsenter readme)[https://github.com/jpetazzo/nsenter]
 - `$ docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter`
 
-### 7. optional: passwordless ssh
+### 8. optional: passwordless ssh
 - on your host machine (where you'll run the ssh client to access the Docker VM) `$ ssh-keygen -t dsa` to generate a key, if not already done
 - `$ cat ~/.ssh/id_dsa.pub | ssh <docker-vm-ip> "mkdir -p .ssh && cat >> ~/.ssh/authorized_keys"` - to list your key as an authorised key on the Docker VM (answer yes to the authenticity question & enter your password to connect)
 - `$ ssh <docker-vm-ip>` - verify that you weren't asked for your password now
 - `$ exit` - leave the ssh session
 
-### 8. Install the start script
+### 9. Install the start script
 - `$ sudo cp ./VirtualBox/docker /usr/local/bin`
 - `$ docker`
 ```
