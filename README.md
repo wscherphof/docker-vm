@@ -80,26 +80,27 @@ This is how I set up my environment:
 
 ### 6. Install Docker
 - `$ sudo bash`
-- optional: see the (Docker installation page)[https://docs.docker.com/installation/ubuntulinux/]
+- Optional: see the (Docker installation page)[https://docs.docker.com/installation/ubuntulinux/]
 - `$ apt-get -y install docker.io`
 - `$ ln -sf /usr/bin/docker.io /usr/local/bin/docker`
 - `$ sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io`
 - `$ docker version` - verify that this reports the client & server versions of Docker
 
-### 7. optional: nsenter
-- optional: see the (nsenter readme)[https://github.com/jpetazzo/nsenter]
+### 7. Optional: nsenter
+- Optional: see the (nsenter readme)[https://github.com/jpetazzo/nsenter]
 - `$ docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter`
 
-### 8. optional: passwordless ssh
-- on your host machine (where you'll run the ssh client to access the Docker VM) `$ ssh-keygen -t dsa` to generate a key, if not already done
+### 8. Optional: passwordless ssh
+- On the host machine (where you'll run the ssh client to access the Docker VM) `$ ssh-keygen -t dsa` to generate a key, if not already done
 - `$ cat ~/.ssh/id_dsa.pub | ssh <docker-vm-ip> "mkdir -p .ssh && cat >> ~/.ssh/authorized_keys"` - to list your key as an authorised key on the Docker VM (answer yes to the authenticity question & enter your password to connect)
 - `$ ssh <docker-vm-ip>` - verify that you weren't asked for your password now
 - `$ exit` - leave the ssh session
 
 ### 9. Install the start script
 - `$ sudo cp ./VirtualBox/docker /usr/local/bin`
-- `$ docker`
+- Test drive:
 ```
+$ docker
 Starting Docker VM...............done
 Welcome to Ubuntu 14.04.1 LTS (GNU/Linux 3.13.0-32-generic x86_64)
 
