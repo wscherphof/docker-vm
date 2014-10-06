@@ -1,10 +1,10 @@
 #!/bin/bash
 
-BOOTING=0
+BOOTING=false
 if ! VBoxManage list runningvms | grep '"Docker"' > /dev/null; then
   echo -n 'Starting Docker VM'
   nohup VBoxHeadless -s Docker > /dev/null &
-  BOOTING=1
+  BOOTING=true
 fi 2> /dev/null
 while :; do
   DOCKER_IP=$(VBoxManage guestproperty get Docker /VirtualBox/GuestInfo/Net/0/V4/IP 2>> /dev/null)
@@ -16,7 +16,7 @@ while :; do
     sleep 1
   fi
 done
-if (($BOOTING)); then
+if $BOOTING; then
   # give it some time to fully start up
   for i in {1..5}; do
     echo -n '.'
