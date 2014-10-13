@@ -1,5 +1,28 @@
 #!/bin/bash
 
+case "$1" in
+"")
+  HOSTS=true
+;;
+-h)
+  HOSTS=false
+;;
+stop)
+  if VBoxManage list runningvms | grep '"Docker"' > /dev/null; then
+    VBoxManage controlvm Docker acpipowerbutton
+  fi
+  exit 0
+;;
+*)
+  echo $"Usage:"
+  echo $"  $0 [-h]"
+  echo $"    Starts the Docker VM if it isn't running, and opens an ssh session to it"
+  echo $"    -h skips updating the hosts file"
+  echo $"  $0 stop"
+  echo $"    Shuts down the Docker VM if it's running"
+  exit 1
+esac
+
 BOOTING=false
 if ! VBoxManage list runningvms | grep '"Docker"' > /dev/null; then
   echo -n 'Starting Docker VM'
@@ -25,8 +48,7 @@ if $BOOTING; then
   echo 'done'
 fi
 
-case "$1" in
-"")
+if $HOSTS; then
   if ! cat /etc/hosts | grep " docker" > /dev/null; then
     sudo bash -c "echo '$DOCKER_IP docker' >> /etc/hosts"
   else
@@ -35,14 +57,6 @@ case "$1" in
       sudo bash -c "sed -i -E 's/.* docker/$DOCKER_IP docker/' /etc/hosts"
     fi
   fi
-;;
--h)
-  true
-;;
-*)
-  echo $"Usage: $0 [-h]"
-  echo $"-h skips updating the hosts file"
-  exit 1
-esac
+fi
 
 ssh $DOCKER_IP
