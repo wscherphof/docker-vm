@@ -97,14 +97,14 @@ EOF
 
 ### 7. Install Docker
 - `$ sudo -i`
-- Optional: see the (Docker installation page)[https://docs.docker.com/installation/ubuntulinux/]
+- Optional: see the [Docker installation page](https://docs.docker.com/installation/ubuntulinux/)
 - `$ apt-get -y install docker.io`
 - `$ ln -sf /usr/bin/docker.io /usr/local/bin/docker`
 - `$ sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io`
 - `$ docker version` - verify that this reports the client & server versions of Docker
 
 ### 8. Optional: nsenter
-- Optional: see the (nsenter readme)[https://github.com/jpetazzo/nsenter]
+- Optional: see the [nsenter readme](https://github.com/jpetazzo/nsenter)
 - `$ docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter`
 
 ### 9. Optional: passwordless ssh
