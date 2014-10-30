@@ -45,22 +45,36 @@ This is how I set up my environment:
 
 ### 3. Install VirtualBox Guest Additions
 - After reboot, login
-- `$ sudo bash`
+- `$ sudo -i`
 - `$ apt-get update`
 - `$ apt-get -y upgrade`
 - `$ apt-get -y install dkms`
 - `$ reboot`
 - After reboot, login
-- `$ sudo bash`
+- `$ sudo -i`
 - In VirtualBox menu (with Ubuntu server window focused) `Devices | Insert Guest Additions CD image...`
 - `$ mount /dev/cdrom /media/cdrom`
 - `$ cd /media/cdrom`
 - `$ ./VBoxLinuxAdditions.run` - the last line will state "Could not find the X.Org or XFree86 Window System, skipping;" that's alright, since we have a windowless server
 
 ### 4. Configure networking
+- Tell Ubuntu you want a second network adapter:
+```
+$ cat >> /etc/network/interfaces <<EOF
+
+# The secondary network interface
+auto eth1
+iface eth1 inet dhcp
+EOF
+```
 - In VirtualBox menu (with Ubuntu server window focused) `Machine | ACPI Shutdown`
 - In the machine settings, choose Network tab
-- Attached to: Bridged Adapter (why? because w/ any other mode, the host failed to connect to the VM)
+- Adapter 1:
+  - Enable Network Adapter
+  - Attached to: Host-only Adapter (this will let you reach the VM from your host computer)
+- Adapter 2:
+  - Enable Network Adapter
+  - Attached to: NAT (this will let you reach the Internet from the VM)
 - OK
 
 ### 5. Create Shared Folder
@@ -71,33 +85,35 @@ This is how I set up my environment:
 - Folder name: `host`
 - Select `Auto-mount` and `Make permanent`
 - OK
+
+### 6. Verify Network & Shared Folder
 - Startup the VM & login
-- `$ ip -f inet addr` - verify that the eth0 interface lists a (DHCP-supplied) address
+- `$ ip -f inet addr` - verify that the eth0 and eth1 interfaces list a (DHCP-supplied) address
 - `$ ls -la /media` - verify that the shared folder `sf_host` is listed, and owned by root in the vboxsf group
 - `$ sudo adduser <you> vboxsf` - this will add your user to the vboxsf group
 - `$ exit`
 - Login again
 - `$ ls /media/sf_host` - verify you don't get "permission denied"
 
-### 6. Install Docker
-- `$ sudo bash`
+### 7. Install Docker
+- `$ sudo -i`
 - Optional: see the (Docker installation page)[https://docs.docker.com/installation/ubuntulinux/]
 - `$ apt-get -y install docker.io`
 - `$ ln -sf /usr/bin/docker.io /usr/local/bin/docker`
 - `$ sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io`
 - `$ docker version` - verify that this reports the client & server versions of Docker
 
-### 7. Optional: nsenter
+### 8. Optional: nsenter
 - Optional: see the (nsenter readme)[https://github.com/jpetazzo/nsenter]
 - `$ docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter`
 
-### 8. Optional: passwordless ssh
+### 9. Optional: passwordless ssh
 - On the host machine (where you'll run the ssh client to access the Docker VM) `$ ssh-keygen -t dsa` to generate a key, if not already done
 - `$ cat ~/.ssh/id_dsa.pub | ssh <docker-vm-ip> "mkdir -p .ssh && cat >> ~/.ssh/authorized_keys"` - to list your key as an authorised key on the Docker VM (answer yes to the authenticity question & enter your password to connect)
 - `$ ssh <docker-vm-ip>` - verify that you weren't asked for your password now
 - `$ exit` - leave the ssh session
 
-### 9. Install the start script
+### 10. Install the start script
 - `$ sudo cp ./VirtualBox/docker /usr/local/bin`
 - Test drive:
 ```
@@ -115,7 +131,7 @@ Welcome to Ubuntu 14.04.1 LTS (GNU/Linux 3.13.0-32-generic x86_64)
   Graph this data and manage this system at:
     https://landscape.canonical.com/
 
-Last login: Thu Oct  2 21:13:24 2014 from 192.168.178.19
+Last login: Thu Oct  2 21:13:24 2014 from 192.168.59.3
 wsf@docker:~$ sudo docker version
 [sudo] password for wsf: 
 Client version: 1.0.1
@@ -128,7 +144,7 @@ Go version (server): go1.2.1
 Git commit (server): 990021a
 wsf@docker:~$ exit
 logout
-Connection to 192.168.178.28 closed.
+Connection to 192.168.59.101 closed.
 ```
 
 
